@@ -7,10 +7,14 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 import styles from "./App.module.css";
 
+function generateRandomNumber (min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 function initializeLocalSpeeds (stringLength, globalSpeed) {
     return new Array(stringLength)
         .fill(null)
-        .map(() => Math.random() * globalSpeed);
+        .map(() => generateRandomNumber(0.2, 1) * globalSpeed);
 }
 
 const string           = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
