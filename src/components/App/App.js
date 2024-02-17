@@ -13,12 +13,16 @@ function initializeLocalSpeeds (stringLength, globalSpeed) {
         .map(() => Math.random() * globalSpeed);
 }
 
-const string        = "XYZ";
-const globalSpeed   = 0.01;
-const crosshairSize = 100;
-const isAnimated    = true;
-const characters    = string.split("");
-const localSpeeds   = initializeLocalSpeeds(string.length, globalSpeed);
+const string            = "X";
+const globalSpeed       = 0.01;
+const crosshairDiameter = 100;
+const isAnimated        = true;
+const characters        = string.split("");
+const localSpeeds       = initializeLocalSpeeds(string.length, globalSpeed);
+
+function euclideanDistance (x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+}
 
 function App () {
     const charactersRef = useRef([]);
@@ -43,29 +47,35 @@ function App () {
     }, [charactersRef.current]);
 
     const { mouseX, mouseY } = useMouseCoordinates();  
-    const { height /*, width*/ } = useWindowDimensions();
+    const { height, width } = useWindowDimensions();
     
-    //const normalizedMouseX = 100 * mouseX / width;
-    //const normalizedMouseY = 100 * mouseY / height;  
+    const normalizedMouseX = 100 * mouseX / width;
+    const normalizedMouseY = 100 * mouseY / height;  
 
-    const crosshairY           = mouseY - (crosshairSize / 2);
-    const normalizedCrosshairY = 100 * crosshairY / height; 
+    //const crosshairY           = mouseY - (crosshairDiameter / 2);
+    //const normalizedCrosshairY = 100 * crosshairY / height; 
 
     useEffect(() => {
         if (isAnimated) {
             const interval = setInterval(() => {
                 const newCharacterBoundingBoxes = characterBoundingBoxes
                     .map((characterBoundingBox, index) => {
-                        if (
-                                Math.round(characterBoundingBox.y) 
-                            === Math.round(normalizedCrosshairY)
-                        ) {
-                            //console.log('foo');
-                        }
-                        const newBoundingBoxY = characterBoundingBox.y >= 100
-                            ? (characterBoundingBox.y % 100) - 3
-                            : characterBoundingBox.y + localSpeeds[index];
-                        return { ...characterBoundingBox, y: newBoundingBoxY };                    
+                        /*
+                        console.log(
+                            Math.round(euclideanDistance(
+                                characterBoundingBox.x / width, 
+                                characterBoundingBox.y,
+                                mouseX / width,
+                                normalizedMouseY
+                            ))
+                        );
+                        */
+                        return { 
+                            x: characterBoundingBox.x, 
+                            y: characterBoundingBox.y >= 100
+                                ? (characterBoundingBox.y % 100) - 3
+                                : characterBoundingBox.y + localSpeeds[index] 
+                        };                    
                     });
                     setCharacterBoundingBoxes(newCharacterBoundingBoxes);
                 }, 1);
@@ -89,10 +99,10 @@ function App () {
             <div 
                 className = {styles.crosshair}
                 style     = {{
-                    height: crosshairSize,
-                    width : crosshairSize,
-                    top   : mouseY - (crosshairSize / 2),
-                    left  : mouseX - (crosshairSize / 2)
+                    height: crosshairDiameter,
+                    width : crosshairDiameter,
+                    top   : mouseY - (crosshairDiameter / 2),
+                    left  : mouseX - (crosshairDiameter / 2)
                 }}
             ></div>
         </div>
