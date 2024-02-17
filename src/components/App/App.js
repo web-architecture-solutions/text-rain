@@ -5,36 +5,36 @@ import Character from "../Character/Character";
 import useMouseCoordinates from "../../hooks/useMouseCoordinates";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 
+import text from '../../text.json';
+
 import styles from "./App.module.css";
 
 function generateRandomNumber (min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function initializeLocalSpeeds (stringLength, globalSpeed) {
+function initializeSpeeds (stringLength) {
     return new Array(stringLength)
         .fill(null)
-        .map(() => generateRandomNumber(0.2, 1) * globalSpeed);
+        .map(() => generateRandomNumber(0.2, 1));
 }
 
-const string           = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const globalSpeed      = 0.5;
-const stoppingDistance = 2.6;
 const isAnimated       = true;
-const characters       = string.split("");
-const localSpeeds      = initializeLocalSpeeds(string.length, globalSpeed);
+const stoppingDistance = 3.1;
+const characters       = text.split("");
+const speeds           = initializeSpeeds(text.length);
 
 function App () {
     function generateNextboundingBoxY (boundingBox, index) {
         const normalizedMouseY  = 100 * mouseY / height;  
-        const distance          = boundingBox.y - normalizedMouseY;
+        const distance          = boundingBox?.y - normalizedMouseY;
             
         if ((distance < 0) && (distance > -stoppingDistance)) {
-            return boundingBox.y;
-        } else if (boundingBox.y >= 100) {
-            return (boundingBox.y % 100) - 3;
+            return boundingBox?.y;
+        } else if (boundingBox?.y >= 100) {
+            return (boundingBox?.y % 100) - 3;
         } else {
-            return boundingBox.y + localSpeeds[index];
+            return boundingBox?.y + speeds[index];
         }
     }
 
@@ -66,7 +66,7 @@ function App () {
                         y: generateNextboundingBoxY(boundingBox, index)
                     }))
                 );
-            }, 10);
+            }, 20);
             return () => clearInterval(interval);
         }
     });

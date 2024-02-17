@@ -6,7 +6,7 @@ const Character = forwardRef(({ value, top }, ref) => {
     return (
         <span 
             className = {styles.Character}
-            style     = {{ top: `${top}vh` }}
+            style     = {{ top: `${top}%` }}
             ref       = {ref}
         >
             {value}

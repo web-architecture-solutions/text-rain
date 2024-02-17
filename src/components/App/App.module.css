@@ -9,5 +9,6 @@
 .text {
     margin: 0 auto;
     
+    height: 100%;
     width: fit-content;
 }
