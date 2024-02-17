@@ -1,0 +1,9 @@
+.App {
+    height: 100vh;
+    
+    overflow: hidden;
+}
+
+.character {
+    position: relative;
+}
