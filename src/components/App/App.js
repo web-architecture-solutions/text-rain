@@ -13,15 +13,26 @@ function initializeLocalSpeeds (stringLength, globalSpeed) {
         .map(() => Math.random() * globalSpeed);
 }
 
-const string      = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const globalSpeed = 0.05;
-const mouseOffset = 2.4;
-const isAnimated  = true;
-const characters  = string.split("");
-const localSpeeds = initializeLocalSpeeds(string.length, globalSpeed);
+const string           = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const globalSpeed      = 0.5;
+const stoppingDistance = 2.6;
+const isAnimated       = true;
+const characters       = string.split("");
+const localSpeeds      = initializeLocalSpeeds(string.length, globalSpeed);
 
 function App () {
-    const charactersRef = useRef([]);
+    function generateNextboundingBoxY (boundingBox, index) {
+        const normalizedMouseY  = 100 * mouseY / height;  
+        const distance          = boundingBox.y - normalizedMouseY;
+            
+        if ((distance < 0) && (distance > -stoppingDistance)) {
+            return boundingBox.y;
+        } else if (boundingBox.y >= 100) {
+            return (boundingBox.y % 100) - 3;
+        } else {
+            return boundingBox.y + localSpeeds[index];
+        }
+    }
 
     function addToCharactersRef (element) {
         if (!charactersRef.current.includes(element)) {
@@ -29,51 +40,29 @@ function App () {
         }
     }
 
-    const [
-        characterBoundingBoxes,
-        setCharacterBoundingBoxes
-    ] = useState([]);
-
-    useEffect(() => {
-        const newCharacterBoundingBoxes 
-            = charactersRef.current.map((element) => {
-                return element?.getBoundingClientRect();
-            });
-        setCharacterBoundingBoxes(newCharacterBoundingBoxes);
-    }, [charactersRef.current]);
+    const charactersRef = useRef([]);
 
     const { mouseY } = useMouseCoordinates();  
     const { height } = useWindowDimensions();
-    
-    const normalizedMouseY = 100 * mouseY / height;  
 
-    function generateNextCharacterBoundingBoxY (characterBoundingBox, index) {
-        const characterDistance = characterBoundingBox.y - normalizedMouseY;
-        if (
-               (characterDistance <  mouseOffset) 
-            && (characterDistance > -mouseOffset)
-        ) {
-            return characterBoundingBox.y;
-        } else if (characterBoundingBox.y >= 100) {
-            return (characterBoundingBox.y % 100) - 3;
-        } else {
-            return characterBoundingBox.y + localSpeeds[index];
-        }
-    }
+    const [boundingBoxes, setBoundingBoxes] = useState([]);
+
+    useEffect(() => {
+        const newboundingBoxes = charactersRef.current.map((element) => {
+            return element?.getBoundingClientRect();
+        });
+        setBoundingBoxes(newboundingBoxes);
+    }, [charactersRef.current]);
 
     useEffect(() => {
         if (isAnimated) {
             const interval = setInterval(() => {
-                const newCharacterBoundingBoxes = characterBoundingBoxes
-                    .map((characterBoundingBox, index) => ({ 
-                        x: characterBoundingBox.x, 
-                        y: generateNextCharacterBoundingBoxY(
-                            characterBoundingBox, 
-                            index
-                        )
-                    }));
-                    setCharacterBoundingBoxes(newCharacterBoundingBoxes);
-                }, 1);
+                setBoundingBoxes(
+                    boundingBoxes.map((boundingBox, index) => ({ 
+                        y: generateNextboundingBoxY(boundingBox, index)
+                    }))
+                );
+            }, 10);
             return () => clearInterval(interval);
         }
     });
@@ -85,7 +74,7 @@ function App () {
                    <Character 
                         value = {character}
                         key   = {`${character}_${index}`}
-                        top   = {characterBoundingBoxes[index]?.y}
+                        top   = {boundingBoxes[index]?.y}
                         ref   = {addToCharactersRef}
                     /> 
                 )}
