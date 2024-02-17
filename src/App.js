@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 
 import styles from "./App.module.css";
 
+const speed                     = 0.01;
 const string                    = "Hello World!";
 const characters                = string.split("");
 const defaultCharacterPositions = new Array(characters.length).fill(0);
+const speeds                    = defaultCharacterPositions.map(() => Math.random() * speed);
 
 function App () {
     const [
@@ -14,13 +16,14 @@ function App () {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const newCharacterPositions = [...characterPositions];
-            const newCharacterPosition = newCharacterPositions[0] >= 100
-                ? (newCharacterPositions[0] % 100) - 3
-                : newCharacterPositions[0] + 0.1;
-            newCharacterPositions[0] = newCharacterPosition;
+            const newCharacterPositions = characterPositions
+                .map((characterPosition, index) => {
+                    return characterPosition >= 100
+                        ? (characterPosition % 100) - 3
+                        : characterPosition + speeds[index];
+                });            
             setCharacterPositions(newCharacterPositions);
-        }, 10);
+        }, 1);
         return () => clearInterval(interval);
     });
     
