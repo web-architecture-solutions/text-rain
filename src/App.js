@@ -1,61 +1,71 @@
 import { useEffect, useState } from "react";
 
-import useMousePosition from "./hooks/useMousePosition";
+import useMouseCoordinates from "./hooks/useMouseCoordinates";
+import useWindowDimensions from "./hooks/useWindowDimensions";
 
 import styles from "./App.module.css";
 
-const hitboxSize                = 100; // px
-const globalSpeed               = 0.01;
-const string                    = "Hello World!";
+const isAnimated                = true;
+const globalSpeed               = 0.01; // ?
+const string                    = "hello_world";
 const characters                = string.split("");
-const defaultCharacterPositions = new Array(characters.length).fill(0);
+const defaultCharacterYCoordinates = new Array(characters.length).fill(0);
 const localSpeeds               
-    = defaultCharacterPositions.map(() => Math.random() * globalSpeed);
+    = defaultCharacterYCoordinates.map(() => Math.random() * globalSpeed);
+
+function Character ({ value, top }) {
+    return (
+        <span 
+            className = {styles.character}
+            style     = {{
+                top: `${top}vh`                        
+            }}
+        >
+            {value}
+        </span>
+    );
+}
 
 function App () {
     const [
-        characterPositions, 
-        setCharacterPositions
-    ] = useState(defaultCharacterPositions);
+        characterYCoordinates, 
+        setCharacterYCoordinates
+    ] = useState(defaultCharacterYCoordinates);
 
-    const mousePosition = useMousePosition();
+    const mouseCoordinates = useMouseCoordinates();
+    const windowDimensions = useWindowDimensions();
+    //const mouseXCoordinate = 100 * mouseCoordinates.x / windowDimensions.width;
+    const mouseYCoordinate = 100 * mouseCoordinates.y / windowDimensions.height;
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            const newCharacterPositions = characterPositions
-                .map((characterPosition, index) => {
-                    return characterPosition >= 100
-                        ? (characterPosition % 100) - 3
-                        : characterPosition + localSpeeds[index];
-                });            
-            setCharacterPositions(newCharacterPositions);
-        }, 1);
-        return () => clearInterval(interval);
+        if (isAnimated) {
+            const interval = setInterval(() => {
+                const newCharacterYCoordinates = characterYCoordinates
+                    .map((characterYCoordinate, index) => {
+                        if (Math.round(characterYCoordinate) === Math.round(mouseYCoordinate)) {
+                            console.log('foo');
+                        }
+                        return characterYCoordinate >= 100
+                            ? (characterYCoordinate % 100) - 3
+                            : characterYCoordinate + localSpeeds[index];                    
+                    });            
+                setCharacterYCoordinates(newCharacterYCoordinates);
+            }, 1);
+            return () => clearInterval(interval);
+        }
     });
     
     return (
         <div className={styles.App}>
-            {characters.map((character, index) => 
-                <span 
-                    key       = {`${character}_${index}`}
-                    className = {styles.character}
-                    style     = {{
-                        top: `${characterPositions[index]}vh`                        
-                    }}
-                >
-                    {character}
-                </span>
-            )}
-
-            <div 
-                className = {styles.hitbox}
-                style     = {{
-                    height: hitboxSize,
-                    width : hitboxSize,
-                    top   : mousePosition.y - (hitboxSize / 2),
-                    left  : mousePosition.x - (hitboxSize / 2)
-                }}
-            ></div>
+            <p className={styles.text}>
+                {characters.map((character, index) => 
+                   <Character 
+                        value = {character}
+                        key   = {`${character}_${index}`}
+                        top   = {characterYCoordinates[index]}
+                    /> 
+                )}
+            </p>
         </div>
     );
 }

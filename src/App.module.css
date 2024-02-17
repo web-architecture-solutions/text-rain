@@ -1,7 +1,4 @@
 .App {
-    display: flex;
-    justify-content: center;
-
     height: 100vh;
     
     overflow: hidden;
@@ -9,11 +6,15 @@
     position: relative;
 }
 
-.character {
-    position: relative;
+.text {
+    margin: 0 auto;
+    width: fit-content;
 }
 
-.hitbox {
-    background-color: black;
-    position: absolute;
+.character {
+    position: relative;
+    
+    text-align: center;
+    
+    width: 10px;
 }
