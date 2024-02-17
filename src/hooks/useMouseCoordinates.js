@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 
 export default function useMouseCoordinate () {
     const [mouseCoordinates, setMouseCoordinates] = useState({
-        x: null,
-        y: null,
+        mouseX: null,
+        mouseY: null,
     });
 
     useEffect(() => {
         const updateMouseCoordinate = (event) => {
-            setMouseCoordinates({ x: event.clientX, y: event.clientY });
+            setMouseCoordinates({ 
+                mouseX: event.clientX, 
+                mouseY: event.clientY 
+            });
         };
         
         window.addEventListener("mousemove", updateMouseCoordinate);
