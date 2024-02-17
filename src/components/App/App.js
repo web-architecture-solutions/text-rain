@@ -14,7 +14,8 @@ function initializeLocalSpeeds (stringLength, globalSpeed) {
 }
 
 const string      = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const globalSpeed = 0.01;
+const globalSpeed = 0.05;
+const mouseOffset = 2.4;
 const isAnimated  = true;
 const characters  = string.split("");
 const localSpeeds = initializeLocalSpeeds(string.length, globalSpeed);
@@ -46,21 +47,31 @@ function App () {
     
     const normalizedMouseY = 100 * mouseY / height;  
 
+    function generateNextCharacterBoundingBoxY (characterBoundingBox, index) {
+        const characterDistance = characterBoundingBox.y - normalizedMouseY;
+        if (
+               (characterDistance <  mouseOffset) 
+            && (characterDistance > -mouseOffset)
+        ) {
+            return characterBoundingBox.y;
+        } else if (characterBoundingBox.y >= 100) {
+            return (characterBoundingBox.y % 100) - 3;
+        } else {
+            return characterBoundingBox.y + localSpeeds[index];
+        }
+    }
+
     useEffect(() => {
         if (isAnimated) {
             const interval = setInterval(() => {
                 const newCharacterBoundingBoxes = characterBoundingBoxes
-                    .map((characterBoundingBox, index) => {
-                        return { 
-                            x: characterBoundingBox.x, 
-                            y: characterBoundingBox.y >= 100
-                                ? (characterBoundingBox.y % 100) - 3
-                                : (characterBoundingBox.y - normalizedMouseY < 0.1) 
-                                    && (characterBoundingBox.y - normalizedMouseY > -0.1)
-                                ? characterBoundingBox.y
-                                : characterBoundingBox.y + localSpeeds[index] 
-                        };           
-                    });
+                    .map((characterBoundingBox, index) => ({ 
+                        x: characterBoundingBox.x, 
+                        y: generateNextCharacterBoundingBoxY(
+                            characterBoundingBox, 
+                            index
+                        )
+                    }));
                     setCharacterBoundingBoxes(newCharacterBoundingBoxes);
                 }, 1);
             return () => clearInterval(interval);
