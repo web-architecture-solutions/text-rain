@@ -11,10 +11,3 @@
     
     width: fit-content;
 }
-
-.crosshair {
-    border: solid 1px black;
-    border-radius: 100%;
-
-    position: absolute;
-}
