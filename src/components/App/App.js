@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import Character from "../Character/Character";
 
 import useMouseCoordinates from "../../hooks/useMouseCoordinates";
-import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 import text from '../../text.json';
 
@@ -13,20 +12,21 @@ function generateRandomNumber (min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function initializeSpeeds (stringLength) {
+function initializeSpeeds (stringLength, globalSpeed) {
     return new Array(stringLength)
         .fill(null)
-        .map(() => generateRandomNumber(0.2, 1));
+        .map(() => generateRandomNumber(0.2, 1) * globalSpeed);
 }
 
 const isAnimated       = true;
-const stoppingDistance = 3.1;
+const globalSpeed      = 0.5;
+const stoppingDistance = 16;
 const characters       = text.split("");
-const speeds           = initializeSpeeds(text.length);
+const localSpeeds      = initializeSpeeds(text.length, globalSpeed);
 
 function App () {
     function generateNextboundingBoxY (boundingBox, index) {
-        const normalizedMouseY  = 100 * mouseY / height;  
+        const normalizedMouseY  = 100 * mouseY / textRef?.current.clientHeight;  
         const distance          = boundingBox?.y - normalizedMouseY;
             
         if ((distance < 0) && (distance > -stoppingDistance)) {
@@ -34,7 +34,7 @@ function App () {
         } else if (boundingBox?.y >= 100) {
             return (boundingBox?.y % 100) - 3;
         } else {
-            return boundingBox?.y + speeds[index];
+            return boundingBox?.y + localSpeeds[index];
         }
     }
 
@@ -44,10 +44,10 @@ function App () {
         }
     }
 
+    const textRef       = useRef(null);
     const charactersRef = useRef([]);
 
     const { mouseY } = useMouseCoordinates();  
-    const { height } = useWindowDimensions();
 
     const [boundingBoxes, setBoundingBoxes] = useState([]);
 
@@ -66,14 +66,14 @@ function App () {
                         y: generateNextboundingBoxY(boundingBox, index)
                     }))
                 );
-            }, 20);
+            }, 1);
             return () => clearInterval(interval);
         }
     });
 
     return (
         <div className={styles.App}>
-            <p className={styles.text}>
+            <p className={styles.text} ref={textRef}>
                 {characters.map((character, index) => 
                    <Character 
                         value = {character}
