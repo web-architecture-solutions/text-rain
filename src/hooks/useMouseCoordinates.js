@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
 
+import useScrollTop from "./useScrollTop";
+
 export default function useMouseCoordinate () {
     const [mouseCoordinates, setMouseCoordinates] = useState({
         mouseX: null,
         mouseY: null,
     });
 
-    const [scrollTop, setScrollTop] = useState(0);
-  
-    useEffect(() => {
-        const updateScrollTop = () => {
-            setScrollTop(document.documentElement.scrollTop);
-        };
-      
-        window.addEventListener("scroll", updateScrollTop);
-      
-        updateScrollTop();
-      
-        return () => window.removeEventListener("scroll", updateScrollTop);
-    }, []);
+    const scrollTop = useScrollTop();
 
     useEffect(() => {
       const updateMouseCoordinate = (event) => {
