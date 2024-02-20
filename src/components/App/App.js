@@ -17,7 +17,7 @@ function App () {
         }
     }
 
-    const textRef       = useRef(null);
+    const textRef       = useRef("");
     const charactersRef = useRef([]);
     const boundingBoxes = useCharacterBoundingBoxes(textRef, charactersRef);
 
