@@ -2,8 +2,8 @@ export function generateRandomNumber (min, max) {
     return Math.random() * (max - min) + min;
 }
 
-export function initializeLocalSpeeds (length, speedFloor, globalSpeed) {
-    return new Array(length)
+export function initializeLocalSpeeds (n, maxSpeed, minSpeed) {
+    return new Array(n)
         .fill(null)
-        .map(() => generateRandomNumber(speedFloor, 1) * globalSpeed);
+        .map(() => generateRandomNumber(minSpeed, 1) * maxSpeed);
 }

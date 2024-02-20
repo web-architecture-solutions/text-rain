@@ -10,8 +10,8 @@ import {
     isAnimated, 
     framesPerSecond,
     direction, 
-    speedFloor, 
-    globalSpeed, 
+    maxSpeed,
+    minSpeed,
     distanceEpsilon 
 } from "../config";
 
@@ -19,7 +19,7 @@ import text from '../text.json';
 
 import { bleedMargin } from "../config";
 
-const localSpeeds = initializeLocalSpeeds(text.length, speedFloor, globalSpeed);
+const localSpeeds = initializeLocalSpeeds(text.length, maxSpeed, minSpeed);
 
 export default function useCharacterBoundingBoxes (textRef, charactersRef) {    
     function calculateNextBoundingBoxY (boundingBox, index) {
