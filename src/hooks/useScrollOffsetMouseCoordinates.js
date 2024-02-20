@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import useScrollTop from "./useScrollTop";
 
-export default function useMouseCoordinate () {
+export default function useScrollOffsetMouseCoordinates () {
     const [mouseCoordinates, setMouseCoordinates] = useState({
         mouseX: null,
         mouseY: null,

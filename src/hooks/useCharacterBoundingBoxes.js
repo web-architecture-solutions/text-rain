@@ -1,35 +1,64 @@
 import { useEffect, useState } from "react";
 
-import useMouseCoordinates from "./useMouseCoordinates";
+import useScrollOffsetMouseCoordinates from "./useScrollOffsetMouseCoordinates";
+
+import { Direction } from "../enums";
 
 import { initializeLocalSpeeds } from "../util";
 
-import { isAnimated, speedFloor, globalSpeed, EPSILON } from "../config";
+import { 
+    isAnimated, 
+    direction, 
+    speedFloor, 
+    globalSpeed, 
+    distanceEpsilon 
+} from "../config";
 
 import text from '../text.json';
+
+import { bleedMargin } from "../config";
 
 const localSpeeds = initializeLocalSpeeds(text.length, speedFloor, globalSpeed);
 
 export default function useCharacterBoundingBoxes (textRef, charactersRef) {    
-    function generateNextBoundingBoxY (boundingBox, index) {
-        const normalizedBoundingBoxY     
+    function calculateNextBoundingBoxY (boundingBox, index) {
+        const normalizedBoundingBoxY 
             = textRef.current?.offsetHeight * boundingBox?.y / 100;
-        const offsetBoundingBoxY           
-            = normalizedBoundingBoxY + textRef.current?.offsetTop
+        const offsetBoundingBoxY 
+            = normalizedBoundingBoxY + textRef.current?.offsetTop;
+        const directionallyOffsetBoundingBoxY = direction === Direction.up 
+            ? offsetBoundingBoxY
+            : offsetBoundingBoxY + boundingBox?.height;
         const normalizedOffsetBoundingBoxY 
-            = offsetBoundingBoxY / document.documentElement.scrollHeight;
-        const distance                     
+            = directionallyOffsetBoundingBoxY 
+            / document.documentElement.scrollHeight;
+        const distance 
             = Math.abs(normalizedOffsetBoundingBoxY - normalizedMouseY);
-        if (distance < EPSILON) {    
-            return boundingBox?.y;
-        } else if (boundingBox?.y <= 0) {
-            return (boundingBox?.y % 100) + 103;
-        } else {
-            return boundingBox?.y - localSpeeds[index];
+        
+        if (distance < distanceEpsilon) return boundingBox?.y;
+
+        switch (direction) {
+            case Direction.up:
+                return boundingBox?.y <= 0
+                    ? (boundingBox?.y % 100) + 100 + bleedMargin
+                    : boundingBox?.y - localSpeeds[index];
+
+            case Direction.down:
+                return boundingBox?.y >= 100
+                    ? (boundingBox?.y % 100) - bleedMargin
+                    : boundingBox?.y + localSpeeds[index];
+        
+            default:
+                console.error(
+                    `Direction "${direction}" is unsupported. 
+                    Please use either "up" or "down"`
+                );
+                break;
         }
+
     }
 
-    const { mouseY }       = useMouseCoordinates();  
+    const { mouseY }       = useScrollOffsetMouseCoordinates();  
     const normalizedMouseY = mouseY / document.documentElement.scrollHeight;
 
     const [boundingBoxes, setBoundingBoxes] = useState([]);
@@ -46,7 +75,8 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
             const interval = setInterval(() => {
                 setBoundingBoxes(
                     boundingBoxes.map((boundingBox, index) => ({ 
-                        y: generateNextBoundingBoxY(boundingBox, index)
+                        height: boundingBox?.height,
+                        y     : calculateNextBoundingBoxY(boundingBox, index)
                     }))
                 );
             }, 1);
