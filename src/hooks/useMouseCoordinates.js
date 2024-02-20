@@ -9,7 +9,9 @@ export default function useMouseCoordinate () {
     const [scrollTop, setScrollTop] = useState(0);
   
     useEffect(() => {
-        const updateScrollTop = () => setScrollTop(document.documentElement.scrollTop);
+        const updateScrollTop = () => {
+            setScrollTop(document.documentElement.scrollTop);
+        };
       
         window.addEventListener("scroll", updateScrollTop);
       
@@ -19,19 +21,20 @@ export default function useMouseCoordinate () {
     }, []);
 
     useEffect(() => {
-        const updateMouseCoordinate = (event) => {
+      const updateMouseCoordinate = (event) => {
             setMouseCoordinates({ 
                 mouseX: event.clientX, 
-                mouseY: event.clientY
+                mouseY: event.clientY + Math.round(scrollTop)
             });
         };
 
-        window.addEventListener("mousemove", updateMouseCoordinate);
+        document.body.addEventListener("mousemove", updateMouseCoordinate);
         
-        return () => {
-            window.removeEventListener("mousemove", updateMouseCoordinate);
-        };
-    }, []);
+        return () => document.body.removeEventListener(
+            "mousemove", 
+            updateMouseCoordinate
+        );
+    }, [scrollTop]);
 
     return mouseCoordinates;
 };

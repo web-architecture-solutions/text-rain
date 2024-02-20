@@ -25,11 +25,11 @@ const characters       = text.split("");
 const localSpeeds      = initializeSpeeds(text.length, globalSpeed);
 
 function App () {
-    function generateNextboundingBoxY (boundingBox, index) {
-        const normalizedMouseY  = 100 * (mouseY) / textRef?.current.clientHeight;  
-        const distance          = boundingBox?.y - normalizedMouseY;
+    function generateNextBoundingBoxY (boundingBox, index) {
+        const normalizedMouseY  = 100 * (mouseY) / document.documentElement.scrollHeight;  
+        const distance          = Math.abs(boundingBox?.y - normalizedMouseY);
             
-        if ((distance < 0) && (distance > -stoppingDistance)) {
+        if ((distance > 0) && (distance < stoppingDistance)) {
             return boundingBox?.y;
         } else if (boundingBox?.y <= 0) {
             return (boundingBox?.y % 100) + 103;
@@ -48,7 +48,7 @@ function App () {
     const charactersRef = useRef([]);
 
     const { mouseY } = useMouseCoordinates();  
-    
+
     //console.log(mouseY, textRef.current?.offsetTop, textRef.current?.offsetTop + textRef.current?.offsetHeight)
 
     const [boundingBoxes, setBoundingBoxes] = useState([]);
@@ -65,7 +65,7 @@ function App () {
             const interval = setInterval(() => {
                 setBoundingBoxes(
                     boundingBoxes.map((boundingBox, index) => ({ 
-                        y: generateNextboundingBoxY(boundingBox, index)
+                        y: generateNextBoundingBoxY(boundingBox, index)
                     }))
                 );
             }, 1);
