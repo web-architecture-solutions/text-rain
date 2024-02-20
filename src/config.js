@@ -1,10 +1,9 @@
 import { Direction } from "./enums";
 
 export const isAnimated      = true;
-export const direction       = Direction.down; // Either up or down
+export const direction       = Direction.DOWN;   // Either UP or DOWN
 
-export const maxSpeed        = 1.2;            // Default: 2
-export const minSpeed        = 0.2;            // Default: 0.2
-export const bleedMargin     = 3;              // Default: 3
-export const framesPerSecond = 66.67;          // Default: 66.67
-export const distanceEpsilon = 0.01;           // Default: 0.01
+export const maxSpeed        = 1.62              // Default: 1.62
+export const minSpeed        = 0.38;             // Default: 0.38
+export const framesPerSecond = 66.67;            // Default: 66.67
+export const distanceEpsilon = 0.01;             // Default: 0.01

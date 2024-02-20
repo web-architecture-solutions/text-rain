@@ -17,17 +17,15 @@ import {
 
 import text from '../text.json';
 
-import { bleedMargin } from "../config";
-
 const localSpeeds = initializeLocalSpeeds(text.length, maxSpeed, minSpeed);
 
 export default function useCharacterBoundingBoxes (textRef, charactersRef) {    
-    function calculateNextBoundingBoxY (boundingBox, index) {
+    function calculateDistance (boundingBox) {
         const normalizedBoundingBoxY 
             = textRef.current?.offsetHeight * boundingBox?.y / 100;
         const positionallyOffsetBoundingBoxY 
             = normalizedBoundingBoxY + textRef.current?.offsetTop;
-        const directionallyOffsetBoundingBoxY = direction === Direction.up 
+        const directionallyOffsetBoundingBoxY = direction === Direction.UP 
             ? positionallyOffsetBoundingBoxY
             : positionallyOffsetBoundingBoxY + boundingBox?.height;
         const normalizedOffsetBoundingBoxY 
@@ -35,20 +33,23 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
             / document.documentElement.scrollHeight;
         const distance 
             = Math.abs(normalizedOffsetBoundingBoxY - normalizedMouseY);
-        
-        if (distance < distanceEpsilon) return boundingBox?.y;
+        return distance;
+    }
 
+    function calculateNextBoundingBoxY (boundingBox, index) {
+        const distance = calculateDistance(boundingBox);
+        if (distance < distanceEpsilon) return boundingBox?.y;
+        const bleedMargin 
+            = 100 * boundingBox?.height / document.documentElement.scrollHeight;
         switch (direction) {
-            case Direction.up:
+            case Direction.UP:
                 return boundingBox?.y <= 0
                     ? (boundingBox?.y % 100) + 100 + bleedMargin
                     : boundingBox?.y - localSpeeds[index];
-
-            case Direction.down:
+            case Direction.DOWN:
                 return boundingBox?.y >= 100
                     ? (boundingBox?.y % 100) - bleedMargin
                     : boundingBox?.y + localSpeeds[index];
-        
             default:
                 console.error(
                     `Direction "${direction}" is unsupported. 
@@ -64,18 +65,13 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
     const [boundingBoxes, setBoundingBoxes] = useState([]);
 
     useEffect(() => {
-        const newboundingBoxes = charactersRef.current.map((element) => {
-            return element?.getBoundingClientRect();
-        });
-        setBoundingBoxes(newboundingBoxes);
-    }, [charactersRef.current]);
-
-    useEffect(() => {
         if (isAnimated) {
             const interval = setInterval(() => {
                 setBoundingBoxes(
                     boundingBoxes.map((boundingBox, index) => ({ 
                         height: boundingBox?.height,
+                        width : boundingBox?.width,
+                        x     : boundingBox?.x,
                         y     : calculateNextBoundingBoxY(boundingBox, index)
                     }))
                 );
@@ -83,6 +79,13 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
             return () => clearInterval(interval);
         }
     });
+
+    useEffect(() => {
+        const newboundingBoxes = charactersRef.current.map((element) => {
+            return element?.getBoundingClientRect();
+        });
+        setBoundingBoxes(newboundingBoxes);
+    }, [charactersRef.current]);
 
     return boundingBoxes;
 }

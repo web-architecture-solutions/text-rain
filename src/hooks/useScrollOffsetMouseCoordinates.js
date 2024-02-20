@@ -11,10 +11,10 @@ export default function useScrollOffsetMouseCoordinates () {
     const scrollTop = useScrollTop();
 
     useEffect(() => {
-      const updateMouseCoordinate = (event) => {
+        function updateMouseCoordinate ({ clientX, clientY }) {
             setMouseCoordinates({ 
-                mouseX: event.clientX, 
-                mouseY: event.clientY + Math.round(scrollTop)
+                mouseX: clientX, 
+                mouseY: clientY + Math.round(scrollTop)
             });
         };
 
