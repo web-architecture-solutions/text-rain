@@ -20,21 +20,21 @@ function initializeSpeeds (stringLength, globalSpeed) {
 
 const isAnimated       = true;
 const globalSpeed      = 0.5;
-const stoppingDistance = 16;
+const stoppingDistance = 1 //16;
 const characters       = text.split("");
 const localSpeeds      = initializeSpeeds(text.length, globalSpeed);
 
 function App () {
     function generateNextboundingBoxY (boundingBox, index) {
-        const normalizedMouseY  = 100 * mouseY / textRef?.current.clientHeight;  
+        const normalizedMouseY  = 100 * (mouseY) / textRef?.current.clientHeight;  
         const distance          = boundingBox?.y - normalizedMouseY;
             
         if ((distance < 0) && (distance > -stoppingDistance)) {
             return boundingBox?.y;
-        } else if (boundingBox?.y >= 100) {
-            return (boundingBox?.y % 100) - 3;
+        } else if (boundingBox?.y <= 0) {
+            return (boundingBox?.y % 100) + 103;
         } else {
-            return boundingBox?.y + localSpeeds[index];
+            return boundingBox?.y - localSpeeds[index];
         }
     }
 
@@ -48,6 +48,8 @@ function App () {
     const charactersRef = useRef([]);
 
     const { mouseY } = useMouseCoordinates();  
+    
+    //console.log(mouseY, textRef.current?.offsetTop, textRef.current?.offsetTop + textRef.current?.offsetHeight)
 
     const [boundingBoxes, setBoundingBoxes] = useState([]);
 
@@ -73,16 +75,26 @@ function App () {
 
     return (
         <div className={styles.App}>
-            <p className={styles.text} ref={textRef}>
-                {characters.map((character, index) => 
-                   <Character 
-                        value = {character}
-                        key   = {`${character}_${index}`}
-                        top   = {boundingBoxes[index]?.y}
-                        ref   = {addToCharactersRef}
-                    /> 
-                )}
-            </p>
+            <section style={{ backgroundColor: "black" }}>
+
+            </section>
+
+            <section>
+                <p className={styles.text} ref={textRef}>
+                    {characters.map((character, index) => 
+                        <Character 
+                            value = {character}
+                            key   = {`${character}_${index}`}
+                            top   = {boundingBoxes[index]?.y}
+                            ref   = {addToCharactersRef}
+                        /> 
+                    )}
+                </p>
+            </section>
+
+            <section style={{ backgroundColor: "red" }}>
+                
+            </section>
         </div>
     );
 }
