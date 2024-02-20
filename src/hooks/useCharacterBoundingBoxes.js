@@ -8,6 +8,7 @@ import { initializeLocalSpeeds } from "../util";
 
 import { 
     isAnimated, 
+    framesPerSecond,
     direction, 
     speedFloor, 
     globalSpeed, 
@@ -24,11 +25,11 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
     function calculateNextBoundingBoxY (boundingBox, index) {
         const normalizedBoundingBoxY 
             = textRef.current?.offsetHeight * boundingBox?.y / 100;
-        const offsetBoundingBoxY 
+        const positionallyOffsetBoundingBoxY 
             = normalizedBoundingBoxY + textRef.current?.offsetTop;
         const directionallyOffsetBoundingBoxY = direction === Direction.up 
-            ? offsetBoundingBoxY
-            : offsetBoundingBoxY + boundingBox?.height;
+            ? positionallyOffsetBoundingBoxY
+            : positionallyOffsetBoundingBoxY + boundingBox?.height;
         const normalizedOffsetBoundingBoxY 
             = directionallyOffsetBoundingBoxY 
             / document.documentElement.scrollHeight;
@@ -55,7 +56,6 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
                 );
                 break;
         }
-
     }
 
     const { mouseY }       = useScrollOffsetMouseCoordinates();  
@@ -79,7 +79,7 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
                         y     : calculateNextBoundingBoxY(boundingBox, index)
                     }))
                 );
-            }, 1);
+            }, 1000 / framesPerSecond);
             return () => clearInterval(interval);
         }
     });
