@@ -31,7 +31,5 @@ export default function useScrollOffsetMouseCoordinates () {
         );
     }, [scrollTop]);
 
-    console.log(mouseCoordinates.mouseY);
-
     return mouseCoordinates;
 };
