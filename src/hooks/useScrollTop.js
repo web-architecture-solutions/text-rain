@@ -19,5 +19,9 @@ export default function useScrollTop () {
         previousScrollTopRef.current = scrollTop;
     }, [scrollTop]);
   
-    return { scrollTop, previousScrollTop: previousScrollTopRef.current };
+    return { 
+        scrollTop, 
+        previousScrollTop: previousScrollTopRef.current,
+        scrollDirection  : Math.sign(scrollTop - previousScrollTopRef.current)
+    };
 }

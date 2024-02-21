@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import useScrollTop                    from "./useScrollTop";
 import useScrollOffsetMouseCoordinates from "./useScrollOffsetMouseCoordinates";
 
 import { Direction } from "../enums";
@@ -9,7 +10,6 @@ import { initializeLocalSpeeds } from "../util";
 import { 
     isAnimated, 
     framesPerSecond,
-    direction, 
     maxSpeed,
     minSpeed,
     distanceEpsilon 
@@ -61,6 +61,20 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
 
     const { mouseY }       = useScrollOffsetMouseCoordinates();  
     const normalizedMouseY = mouseY / document.documentElement.scrollHeight;
+
+    const { scrollDirection } = useScrollTop();
+
+    const [direction, setDirection] = useState(Direction.UP);
+
+    useEffect(() => {
+        setDirection(
+            scrollDirection === 1 
+                ? Direction.UP 
+                : scrollDirection === -1 
+                ? Direction.DOWN 
+                : direction
+        );
+    }, [scrollDirection]);
 
     const [boundingBoxes, setBoundingBoxes] = useState([]);
 
