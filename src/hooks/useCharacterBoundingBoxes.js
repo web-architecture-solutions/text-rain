@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import useScrollTop                    from "./useScrollTop";
 import useScrollOffsetMouseCoordinates from "./useScrollOffsetMouseCoordinates";
+import useGravityDirection             from "./useGravityDirection";
 
 import { Direction } from "../enums";
 
@@ -25,7 +25,8 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
             = textRef.current?.offsetHeight * boundingBox?.y / 100;
         const positionallyOffsetBoundingBoxY 
             = normalizedBoundingBoxY + textRef.current?.offsetTop;
-        const directionallyOffsetBoundingBoxY = direction === Direction.UP 
+        const directionallyOffsetBoundingBoxY 
+            = gravityDirection === Direction.UP 
             ? positionallyOffsetBoundingBoxY
             : positionallyOffsetBoundingBoxY + boundingBox?.height / 2;
         const normalizedOffsetBoundingBoxY 
@@ -41,7 +42,7 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
         if (distance < distanceEpsilon) return boundingBox?.y;
         const bleedMargin 
             = 100 * boundingBox?.height / document.documentElement.scrollHeight;
-        switch (direction) {
+        switch (gravityDirection) {
             case Direction.UP:
                 return boundingBox?.y <= 0
                     ? (boundingBox?.y % 100) + 100 + bleedMargin
@@ -52,8 +53,8 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
                     : boundingBox?.y + localSpeeds[index];
             default:
                 console.error(
-                    `Direction "${direction}" is unsupported. 
-                    Please use either "up" or "down"`
+                    `Direction "${gravityDirection}" is unsupported. 
+                    Please use either UP or DOWN`
                 );
                 break;
         }
@@ -62,19 +63,7 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
     const { mouseY }       = useScrollOffsetMouseCoordinates();  
     const normalizedMouseY = mouseY / document.documentElement.scrollHeight;
 
-    const { scrollDirection } = useScrollTop();
-
-    const [direction, setDirection] = useState(Direction.UP);
-
-    useEffect(() => {
-        setDirection(
-            scrollDirection === 1 
-                ? Direction.UP 
-                : scrollDirection === -1 
-                ? Direction.DOWN 
-                : direction
-        );
-    }, [scrollDirection]);
+    const gravityDirection = useGravityDirection();
 
     const [boundingBoxes, setBoundingBoxes] = useState([]);
 
@@ -95,10 +84,10 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
     });
 
     useEffect(() => {
-        const newboundingBoxes = charactersRef.current.map((element) => {
+        const newBoundingBoxes = charactersRef.current.map((element) => {
             return element?.getBoundingClientRect();
         });
-        setBoundingBoxes(newboundingBoxes);
+        setBoundingBoxes(newBoundingBoxes);
     }, [charactersRef.current]);
 
     return boundingBoxes;

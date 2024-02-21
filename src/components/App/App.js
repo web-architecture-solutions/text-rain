@@ -23,7 +23,7 @@ function App () {
 
     return (
         <div className={styles.App}>
-            <section style={{ backgroundColor: "black" }}></section>
+            <section></section>
 
             <section>
                 <p className={styles.text} ref={textRef}>
@@ -38,7 +38,7 @@ function App () {
                 </p>
             </section>
 
-            <section style={{ backgroundColor: "red" }}></section>
+            <section></section>
         </div>
     );
 }
