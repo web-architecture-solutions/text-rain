@@ -3,12 +3,16 @@
 }
 
 .text {    
-    background-color: white;
+    border-top: double black 16px;
+    border-bottom: double black 16px;
 
-    height: 100%;
-    width: 100%;
+    height: calc(100% - 2rem);
+    width: calc(100% - 2rem);
 
     margin: 0;
+    padding: 0 1rem;
 
     overflow: hidden;
+
+    text-align: center;
 }
