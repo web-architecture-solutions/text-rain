@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function useScrollTop () {
     const [scrollTop, setScrollTop] = useState(0);
   
+    const previousScrollTopRef = useRef(scrollTop);
+
     useEffect(() => {
         const updateScrollTop = () => setScrollTop(document.documentElement.scrollTop);
       
@@ -12,6 +14,10 @@ export default function useScrollTop () {
       
         return () => window.removeEventListener("scroll", updateScrollTop);
     }, []);
+
+    useEffect(() => {
+        previousScrollTopRef.current = scrollTop;
+    }, [scrollTop]);
   
-    return scrollTop;
+    return { scrollTop, previousScrollTop: previousScrollTopRef.current };
 }

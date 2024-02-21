@@ -8,7 +8,7 @@ export default function useScrollOffsetMouseCoordinates () {
         mouseY: null,
     });
 
-    const scrollTop = useScrollTop();
+    const { scrollTop, previousScrollTop } = useScrollTop();
 
     useEffect(() => {
         function updateMouseCoordinate ({ clientX, clientY }) {
@@ -18,6 +18,11 @@ export default function useScrollOffsetMouseCoordinates () {
             });
         };
 
+        setMouseCoordinates({ 
+            ...mouseCoordinates,
+            mouseY: mouseCoordinates.mouseY - previousScrollTop + scrollTop
+        });
+
         document.body.addEventListener("mousemove", updateMouseCoordinate);
         
         return () => document.body.removeEventListener(
@@ -25,6 +30,8 @@ export default function useScrollOffsetMouseCoordinates () {
             updateMouseCoordinate
         );
     }, [scrollTop]);
+
+    console.log(mouseCoordinates.mouseY);
 
     return mouseCoordinates;
 };
