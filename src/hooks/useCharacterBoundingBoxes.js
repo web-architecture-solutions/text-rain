@@ -5,21 +5,13 @@ import useGravityDirection             from "./useGravityDirection";
 
 import { Direction } from "../enums";
 
-import { initializeLocalSpeeds } from "../util";
+import { isAnimated, framesPerSecond, distanceEpsilon } from "../config";
 
-import { 
-    isAnimated, 
-    framesPerSecond,
-    maxSpeed,
-    minSpeed,
-    distanceEpsilon 
-} from "../config";
-
-import text from '../text.json';
-
-const localSpeeds = initializeLocalSpeeds(text.length, maxSpeed, minSpeed);
-
-export default function useCharacterBoundingBoxes (textRef, charactersRef) {    
+export default function useCharacterBoundingBoxes (
+    textRef, 
+    charactersRef,
+    localSpeeds
+) {    
     function calculateDistance (boundingBox) {
         const normalizedBoundingBoxY 
             = textRef.current?.offsetHeight * boundingBox?.y / 100;
