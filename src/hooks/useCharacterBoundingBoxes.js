@@ -27,7 +27,7 @@ export default function useCharacterBoundingBoxes (textRef, charactersRef) {
             = normalizedBoundingBoxY + textRef.current?.offsetTop;
         const directionallyOffsetBoundingBoxY = direction === Direction.UP 
             ? positionallyOffsetBoundingBoxY
-            : positionallyOffsetBoundingBoxY + boundingBox?.height;
+            : positionallyOffsetBoundingBoxY + boundingBox?.height / 2;
         const normalizedOffsetBoundingBoxY 
             = directionallyOffsetBoundingBoxY 
             / document.documentElement.scrollHeight;
