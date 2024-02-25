@@ -52,7 +52,7 @@ function App () {
                             top       = {boundingBoxes[index]?.y}
                             mass      = {boundingBoxes[index]?.mass}
                             maxMass   = {maxGeneratedMass}
-                            isStopped = {boundingBoxes[index]?.isStopped}
+                            distance  = {boundingBoxes[index]?.distance}
                             ref       = {addToCharactersRef}
                         /> 
                     )}

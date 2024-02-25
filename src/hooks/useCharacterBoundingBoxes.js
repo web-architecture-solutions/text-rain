@@ -35,8 +35,7 @@ export default function useCharacterBoundingBoxes (
         return distance;
     }
 
-    function calculateNextBoundingBoxY (boundingBox, index) {
-        const distance = calculateDistance(boundingBox);
+    function calculateNextBoundingBoxY (boundingBox, index, distance) {
         if (distance < distanceEpsilon) return boundingBox?.y;
         const bleedMargin 
             = 100 * boundingBox?.height / document.documentElement.scrollHeight;
@@ -72,15 +71,20 @@ export default function useCharacterBoundingBoxes (
             const interval = setInterval(() => {
                 setBoundingBoxes(
                     boundingBoxes.map((boundingBox, index) => { 
+                        const distance = calculateDistance(boundingBox);
                         const nextBoundingBoxY 
-                            = calculateNextBoundingBoxY(boundingBox, index);
+                            = calculateNextBoundingBoxY(
+                                boundingBox, 
+                                index, 
+                                distance
+                            );
                         return {
                             height   : boundingBox?.height,
                             width    : boundingBox?.width,
                             x        : boundingBox?.x,
                             y        : nextBoundingBoxY,
                             mass     : characterMasses[index],
-                            isStopped: boundingBox?.y === nextBoundingBoxY
+                            distance : distance
                         };
                     })
                 );

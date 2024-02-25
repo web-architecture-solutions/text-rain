@@ -4,20 +4,18 @@ import { motionBlur } from "../../config";
 
 import styles from "./Character.module.css";
 
-const Character = forwardRef(({ value, top, mass, isStopped, maxMass }, ref) => {
-    const RBGValue = 255 - (255 * mass / maxMass) < 89 
-        ? 255 - (255 * mass / maxMass)
+const Character = forwardRef(({ value, top, mass, maxMass, distance }, ref) => {
+    const RBGValue  = (255 * mass / maxMass) * Math.sqrt(distance) < 89 
+        ? (255 * mass / maxMass) * Math.sqrt(distance)
         : 89;
 
     return (
         <span 
             className = {styles.Character}
             style     = {{ 
-                filter: `blur(${isStopped ? 0 : mass * motionBlur}px)`,
+                filter: `blur(${mass * motionBlur * Math.sqrt(distance)}px)`,
                 top: `${top}%`,
-                color:  isStopped 
-                    ? "black" 
-                    : `rgb(${[RBGValue, RBGValue, RBGValue]})`
+                color: `rgb(${[RBGValue, RBGValue, RBGValue]})`
             }}
             ref       = {ref}
         >
