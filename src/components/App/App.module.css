@@ -11,8 +11,8 @@
 }
 
 .text {    
-    border-top: double black 16px;
-    border-bottom: double black 16px;
+    border-top: solid black calc(1vw / 2);
+    border-bottom: solid black calc(1vw / 2);
 
     height: calc(100% - 2rem);
     width: calc(100% - 2rem);
