@@ -14,7 +14,7 @@
     border-top: solid black calc(1vw / 2);
     border-bottom: solid black calc(1vw / 2);
 
-    height: calc(100% - 2rem);
+    height: calc(100% - 1vw);
     width: calc(100% - 2rem);
 
     margin: 0;
