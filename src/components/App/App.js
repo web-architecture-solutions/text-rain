@@ -38,7 +38,7 @@ function App () {
     return (
         <div className={styles.App}>
             <section className={styles.cover}>
-                Scroll Down
+                As above, so below &#129107;
             </section>
 
             <section>
@@ -60,7 +60,7 @@ function App () {
             </section>
 
             <section className={styles.cover}>
-                Scroll Up
+                As below, so above &#129105;   
             </section>
         </div>
     );
