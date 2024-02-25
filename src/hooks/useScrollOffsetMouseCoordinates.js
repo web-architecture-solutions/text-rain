@@ -4,8 +4,8 @@ import useScrollTop from "./useScrollTop";
 
 export default function useScrollOffsetMouseCoordinates () {
     const [mouseCoordinates, setMouseCoordinates] = useState({
-        mouseX: null,
-        mouseY: null,
+        mouseX: window.innerWidth,
+        mouseY: window.innerHeight,
     });
 
     const { scrollTop, previousScrollTop } = useScrollTop();
@@ -20,7 +20,7 @@ export default function useScrollOffsetMouseCoordinates () {
 
         setMouseCoordinates((mouseCoordinates) => ({ 
             ...mouseCoordinates,
-            mouseY: (mouseCoordinates.mouseY - previousScrollTop + scrollTop)
+            mouseY: mouseCoordinates.mouseY - previousScrollTop + scrollTop
         }));
 
         document.body.addEventListener("mousemove", updateMouseCoordinate);

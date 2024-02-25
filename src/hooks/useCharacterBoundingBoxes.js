@@ -7,6 +7,12 @@ import { Direction } from "../enums";
 
 import { isAnimated, framesPerSecond, distanceEpsilon } from "../config";
 
+function getBoundingBoxes (charactersRef) {
+    return charactersRef.current.map((element) => {
+        return element?.getBoundingClientRect();
+    });
+}
+
 export default function useCharacterBoundingBoxes (
     textRef, 
     charactersRef,
@@ -36,7 +42,7 @@ export default function useCharacterBoundingBoxes (
             = 100 * boundingBox?.height / document.documentElement.scrollHeight;
         switch (gravityDirection) {
             case Direction.UP:
-                return boundingBox?.y <= 0
+                return boundingBox?.y < 0
                     ? (boundingBox?.y % 100) + 100 + bleedMargin
                     : boundingBox?.y - localSpeeds[index];
             case Direction.DOWN:
@@ -57,7 +63,9 @@ export default function useCharacterBoundingBoxes (
 
     const gravityDirection = useGravityDirection();
 
-    const [boundingBoxes, setBoundingBoxes] = useState([]);
+    const initialBoundingBoxes = getBoundingBoxes(charactersRef);
+
+    const [boundingBoxes, setBoundingBoxes] = useState(initialBoundingBoxes);
 
     useEffect(() => {
         if (isAnimated) {
@@ -76,9 +84,7 @@ export default function useCharacterBoundingBoxes (
     });
 
     useEffect(() => {
-        const newBoundingBoxes = charactersRef.current.map((element) => {
-            return element?.getBoundingClientRect();
-        });
+        const newBoundingBoxes = getBoundingBoxes(charactersRef);
         setBoundingBoxes(newBoundingBoxes);
     }, [charactersRef]);
 
