@@ -72,10 +72,12 @@ export default function useCharacterBoundingBoxes (
             const interval = setInterval(() => {
                 setBoundingBoxes(
                     boundingBoxes.map((boundingBox, index) => ({ 
-                        height: boundingBox?.height,
-                        width : boundingBox?.width,
-                        x     : boundingBox?.x,
-                        y     : calculateNextBoundingBoxY(boundingBox, index)
+                        height   : boundingBox?.height,
+                        width    : boundingBox?.width,
+                        x        : boundingBox?.x,
+                        y        : calculateNextBoundingBoxY(boundingBox, index),
+                        speed    : localSpeeds[index],
+                        isStopped: boundingBox?.y === calculateNextBoundingBoxY(boundingBox, index)
                     }))
                 );
             }, 1000 / framesPerSecond);

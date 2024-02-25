@@ -31,6 +31,8 @@ function App () {
         gravityDirection 
     } = useCharacterBoundingBoxes(textRef, charactersRef, localSpeeds);
 
+    //console.log(boundingBoxes)
+
     return (
         <div className={styles.App}>
             <section className={styles.cover}>
@@ -43,10 +45,12 @@ function App () {
                 <p className={styles.text} ref={textRef}>
                     {characters.map((character, index) => 
                         <Character 
-                            value = {character}
-                            key   = {`${character}_${index}`}
-                            top   = {boundingBoxes[index]?.y}
-                            ref   = {addToCharactersRef}
+                            value     = {character}
+                            key       = {`${character}_${index}`}
+                            top       = {boundingBoxes[index]?.y}
+                            speed     = {boundingBoxes[index]?.speed}
+                            isStopped = {boundingBoxes[index]?.isStopped}
+                            ref       = {addToCharactersRef}
                         /> 
                     )}
                 </p>
