@@ -44,11 +44,11 @@ export default function useCharacterBoundingBoxes (
             case Direction.UP:
                 return boundingBox?.y < 0
                     ? (boundingBox?.y % 100) + 100 + bleedMargin
-                    : boundingBox?.y - characterMasses[index];
+                    : boundingBox?.y - characterMasses[index] / Math.sqrt(distance);
             case Direction.DOWN:
                 return boundingBox?.y >= 100
                     ? (boundingBox?.y % 100) - bleedMargin
-                    : boundingBox?.y + characterMasses[index];
+                    : boundingBox?.y + characterMasses[index] / Math.sqrt(distance);
             default:
                 console.error(
                     `Direction "${gravityDirection}" is unsupported. 
