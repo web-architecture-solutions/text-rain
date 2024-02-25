@@ -24,3 +24,15 @@
 
     text-align: center;
 }
+
+.arrow {
+    color: rgb(149, 149, 149);
+    
+    font-size: 30vw;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    
+    transform: translate(-50%, -50%);
+}

@@ -4,13 +4,15 @@ import Character from "../Character/Character";
 
 import useCharacterBoundingBoxes from "../../hooks/useCharacterBoundingBoxes";
 
+import { Direction } from "../../enums";
+
 import { initializeLocalSpeeds } from "../../util";
 
 import { maxSpeed, minSpeed } from "../../config";
 
 import text from '../../text.json';
 
-import styles from "./App.module.css";
+import styles from "./App.module.css"
 
 const characters  = text.split("");
 const localSpeeds = initializeLocalSpeeds(text.length, maxSpeed, minSpeed);
@@ -24,8 +26,11 @@ function App () {
 
     const textRef       = useRef("");
     const charactersRef = useRef([]);
-    const boundingBoxes 
-        = useCharacterBoundingBoxes(textRef, charactersRef, localSpeeds);
+
+    const { 
+        boundingBoxes, 
+        gravityDirection 
+    } = useCharacterBoundingBoxes(textRef, charactersRef, localSpeeds);
 
     return (
         <div className={styles.App}>
@@ -34,6 +39,12 @@ function App () {
             </section>
 
             <section>
+                {gravityDirection === Direction.DOWN ? (
+                    <span className={styles.arrow}>&#129095;</span>
+                ) : (
+                    <span className={styles.arrow}>&#129093;</span>
+                )}
+
                 <p className={styles.text} ref={textRef}>
                     {characters.map((character, index) => 
                         <Character 

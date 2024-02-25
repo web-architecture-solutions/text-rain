@@ -88,5 +88,5 @@ export default function useCharacterBoundingBoxes (
         setBoundingBoxes(newBoundingBoxes);
     }, [charactersRef]);
 
-    return boundingBoxes;
+    return { boundingBoxes, gravityDirection };
 }
