@@ -39,11 +39,16 @@ function App () {
             </section>
 
             <section>
-                {gravityDirection === Direction.DOWN ? (
-                    <span className={styles.arrow}>&#129095;</span>
-                ) : (
-                    <span className={styles.arrow}>&#129093;</span>
-                )}
+                <span 
+                    className={styles.arrow}
+                    style={{
+                        transform: gravityDirection === Direction.DOWN
+                            ? "translate(-50%, -50%) rotate(0)"
+                            : "translate(-50%, -50%) rotate(180deg)"
+                    }}
+                >
+                    &#129095;
+                </span>
 
                 <p className={styles.text} ref={textRef}>
                     {characters.map((character, index) => 
