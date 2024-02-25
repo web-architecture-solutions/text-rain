@@ -29,7 +29,9 @@ function App () {
 
     return (
         <div className={styles.App}>
-            <section></section>
+            <section className={styles.cover}>
+                Scroll Down
+            </section>
 
             <section>
                 <p className={styles.text} ref={textRef}>
@@ -44,7 +46,9 @@ function App () {
                 </p>
             </section>
 
-            <section></section>
+            <section className={styles.cover}>
+                Scroll Up
+            </section>
         </div>
     );
 }

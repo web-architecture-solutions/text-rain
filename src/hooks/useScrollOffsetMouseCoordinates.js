@@ -20,7 +20,7 @@ export default function useScrollOffsetMouseCoordinates () {
 
         setMouseCoordinates({ 
             ...mouseCoordinates,
-            mouseY: mouseCoordinates.mouseY - previousScrollTop + scrollTop
+            mouseY: (mouseCoordinates.mouseY - previousScrollTop + scrollTop)
         });
 
         document.body.addEventListener("mousemove", updateMouseCoordinate);
@@ -29,7 +29,7 @@ export default function useScrollOffsetMouseCoordinates () {
             "mousemove", 
             updateMouseCoordinate
         );
-    }, [scrollTop]);
+    }, [mouseCoordinates.mouseY, scrollTop]);
 
     return mouseCoordinates;
 };

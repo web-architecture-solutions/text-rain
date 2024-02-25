@@ -2,6 +2,14 @@
     position: relative;
 }
 
+.cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 6vw;
+}
+
 .text {    
     border-top: double black 16px;
     border-bottom: double black 16px;
