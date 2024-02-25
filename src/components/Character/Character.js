@@ -3,7 +3,9 @@ import { forwardRef } from "react";
 import styles from "./Character.module.css";
 
 const Character = forwardRef(({ value, top, mass, isStopped, maxMass }, ref) => {
-    const RBGValue = 255 - (255 * mass / maxMass);
+    const RBGValue = 255 - (255 * mass / maxMass) < 89 
+        ? 255 - (255 * mass / maxMass)
+        : 89;
 
     return (
         <span 
