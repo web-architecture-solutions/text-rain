@@ -2,6 +2,7 @@ import { useRef } from "react";
 
 import Character from "../Character/Character";
 
+import useArrowOpacity           from "../../hooks/useArrowOpacity";
 import useCharacterBoundingBoxes from "../../hooks/useCharacterBoundingBoxes";
 
 import { Direction } from "../../enums";
@@ -32,6 +33,8 @@ function App () {
         gravityDirection 
     } = useCharacterBoundingBoxes(textRef, charactersRef, localSpeeds);
 
+    const arrowOpacity = useArrowOpacity(gravityDirection);
+
     return (
         <div className={styles.App}>
             <section className={styles.cover}>
@@ -40,8 +43,9 @@ function App () {
 
             <section>
                 <span 
-                    className={styles.arrow}
-                    style={{
+                    className = {styles.arrow}
+                    style     = {{
+                        opacity  : arrowOpacity,
                         transform: gravityDirection === Direction.DOWN
                             ? "translate(-50%, -50%) rotate(0)"
                             : "translate(-50%, -50%) rotate(180deg)"
