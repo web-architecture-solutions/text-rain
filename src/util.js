@@ -2,8 +2,8 @@ export function generateRandomNumber (min, max) {
     return Math.random() * (max - min) + min;
 }
 
-export function initializeLocalSpeeds (n, maxSpeed, minSpeed) {
+export function initializeCharacterMasses (n, maxMass, minMass) {
     return new Array(n)
         .fill(null)
-        .map(() => generateRandomNumber(minSpeed, 1) * maxSpeed);
+        .map(() => generateRandomNumber(minMass, 1) * maxMass);
 }

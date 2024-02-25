@@ -16,7 +16,7 @@ function getBoundingBoxes (charactersRef) {
 export default function useCharacterBoundingBoxes (
     textRef, 
     charactersRef,
-    localSpeeds
+    characterMasses
 ) {    
     function calculateDistance (boundingBox) {
         const normalizedBoundingBoxY 
@@ -44,11 +44,11 @@ export default function useCharacterBoundingBoxes (
             case Direction.UP:
                 return boundingBox?.y < 0
                     ? (boundingBox?.y % 100) + 100 + bleedMargin
-                    : boundingBox?.y - localSpeeds[index];
+                    : boundingBox?.y - characterMasses[index];
             case Direction.DOWN:
                 return boundingBox?.y >= 100
                     ? (boundingBox?.y % 100) - bleedMargin
-                    : boundingBox?.y + localSpeeds[index];
+                    : boundingBox?.y + characterMasses[index];
             default:
                 console.error(
                     `Direction "${gravityDirection}" is unsupported. 
@@ -71,14 +71,18 @@ export default function useCharacterBoundingBoxes (
         if (isAnimated) {
             const interval = setInterval(() => {
                 setBoundingBoxes(
-                    boundingBoxes.map((boundingBox, index) => ({ 
-                        height   : boundingBox?.height,
-                        width    : boundingBox?.width,
-                        x        : boundingBox?.x,
-                        y        : calculateNextBoundingBoxY(boundingBox, index),
-                        speed    : localSpeeds[index],
-                        isStopped: boundingBox?.y === calculateNextBoundingBoxY(boundingBox, index)
-                    }))
+                    boundingBoxes.map((boundingBox, index) => { 
+                        const nextBoundingBoxY 
+                            = calculateNextBoundingBoxY(boundingBox, index);
+                        return {
+                            height   : boundingBox?.height,
+                            width    : boundingBox?.width,
+                            x        : boundingBox?.x,
+                            y        : nextBoundingBoxY,
+                            mass     : characterMasses[index],
+                            isStopped: boundingBox?.y === nextBoundingBoxY
+                        };
+                    })
                 );
             }, 1000 / framesPerSecond);
             return () => clearInterval(interval);
