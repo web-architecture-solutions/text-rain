@@ -31,7 +31,9 @@ function App () {
         gravityDirection 
     } = useCharacterBoundingBoxes(textRef, charactersRef, masses);
 
-    //console.log(boundingBoxes)
+    const actualMaxMass = Math.max(
+        ...boundingBoxes.map((boundingBox) => boundingBox?.mass)
+    );
 
     return (
         <div className={styles.App}>
@@ -49,6 +51,7 @@ function App () {
                             key       = {`${character}_${index}`}
                             top       = {boundingBoxes[index]?.y}
                             mass      = {boundingBoxes[index]?.mass}
+                            maxMass   = {actualMaxMass}
                             isStopped = {boundingBoxes[index]?.isStopped}
                             ref       = {addToCharactersRef}
                         /> 

@@ -1,10 +1,8 @@
 import { forwardRef } from "react";
 
-import { maxMass } from "../../config";
-
 import styles from "./Character.module.css";
 
-const Character = forwardRef(({ value, top, mass, isStopped }, ref) => {
+const Character = forwardRef(({ value, top, mass, isStopped, maxMass }, ref) => {
     const RBGValue = 255 -  (255 * mass / maxMass);
 
     return (
