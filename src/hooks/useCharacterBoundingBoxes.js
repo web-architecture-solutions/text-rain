@@ -80,7 +80,7 @@ export default function useCharacterBoundingBoxes (
             return element?.getBoundingClientRect();
         });
         setBoundingBoxes(newBoundingBoxes);
-    }, [charactersRef.current]);
+    }, [charactersRef]);
 
     return boundingBoxes;
 }

@@ -6,11 +6,10 @@ export default function useScrollTop () {
     const previousScrollTopRef = useRef(scrollTop);
 
     useEffect(() => {
-        const updateScrollTop = () => setScrollTop(document.documentElement.scrollTop);
+        const updateScrollTop 
+            = () => setScrollTop(document.documentElement.scrollTop);
       
         window.addEventListener("scroll", updateScrollTop);
-      
-        updateScrollTop();
       
         return () => window.removeEventListener("scroll", updateScrollTop);
     }, []);

@@ -18,10 +18,10 @@ export default function useScrollOffsetMouseCoordinates () {
             });
         };
 
-        setMouseCoordinates({ 
+        setMouseCoordinates((mouseCoordinates) => ({ 
             ...mouseCoordinates,
             mouseY: (mouseCoordinates.mouseY - previousScrollTop + scrollTop)
-        });
+        }));
 
         document.body.addEventListener("mousemove", updateMouseCoordinate);
         
@@ -29,7 +29,7 @@ export default function useScrollOffsetMouseCoordinates () {
             "mousemove", 
             updateMouseCoordinate
         );
-    }, [mouseCoordinates.mouseY, scrollTop]);
+    }, [mouseCoordinates.mouseY, scrollTop, previousScrollTop]);
 
     return mouseCoordinates;
 };
