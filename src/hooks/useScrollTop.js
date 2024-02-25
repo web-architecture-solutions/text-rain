@@ -8,9 +8,9 @@ export default function useScrollTop () {
     useEffect(() => {
         const updateScrollTop 
             = () => setScrollTop(document.documentElement.scrollTop);
-      
+
         window.addEventListener("scroll", updateScrollTop);
-      
+
         return () => window.removeEventListener("scroll", updateScrollTop);
     }, []);
 

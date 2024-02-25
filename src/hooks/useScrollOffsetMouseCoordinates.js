@@ -4,8 +4,8 @@ import useScrollTop from "./useScrollTop";
 
 export default function useScrollOffsetMouseCoordinates () {
     const [mouseCoordinates, setMouseCoordinates] = useState({
-        mouseX: window.innerWidth,
-        mouseY: window.innerHeight,
+        mouseX: null,
+        mouseY: null,
     });
 
     const { scrollTop, previousScrollTop } = useScrollTop();
