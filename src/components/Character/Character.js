@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import styles from "./Character.module.css";
 
 const Character = forwardRef(({ value, top, mass, isStopped, maxMass }, ref) => {
-    const RBGValue = 255 -  (255 * mass / maxMass);
+    const RBGValue = 255 - (255 * mass / maxMass);
 
     return (
         <span 
@@ -11,7 +11,9 @@ const Character = forwardRef(({ value, top, mass, isStopped, maxMass }, ref) => 
             style     = {{ 
                 filter: `blur(${isStopped ? 0 : mass}px)`,
                 top: `${top}%`,
-                color:  `rgb(${[RBGValue, RBGValue, RBGValue]})`
+                color:  isStopped 
+                    ? "black" 
+                    : `rgb(${[RBGValue, RBGValue, RBGValue]})`
             }}
             ref       = {ref}
         >
